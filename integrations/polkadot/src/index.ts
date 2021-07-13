@@ -17,11 +17,11 @@ import {
   ) => {
     const provider = new WsProvider(config.endpoint);
     const api = await ApiPromise.create({ provider });
-  
+
     const transport = new WebSocketTransport(config.endpoint);
     const client = new Client(new RequestManager([transport]));
-  
-    api.rpc.chain.subscribeNewHeads(async (header: Header) => {
+
+    api.rpc.chain.subscribeFinalizedHeads(async (header: Header) => {
       const { block, tags } = await parseBlockByNumber(
         header.number.toNumber(),
         api,
@@ -39,10 +39,10 @@ import {
   ) => {
     const provider = new WsProvider(config.endpoint);
     const api = await ApiPromise.create({ provider });
-  
+
     const transport = new WebSocketTransport(config.endpoint);
     const client = new Client(new RequestManager([transport]));
-  
+
     listener.subscribe(async (res) => {
       const height = parseFloat(
         res.transaction.tags.find((tag) => tag.name === "Height")?.value!
@@ -71,4 +71,3 @@ import {
   
     return instance;
   }
-  
