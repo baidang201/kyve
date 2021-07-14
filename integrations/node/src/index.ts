@@ -5,7 +5,7 @@ import Arweave from "arweave";
 import SmartWeaveInstance from "@kyve/smartweave";
 import AvalancheInstance from "@kyve/avalanche";
 import CosmosInstance from "@kyve/cosmos";
-import PolkadotInstance from "@kyve/polkadot";
+import PolkadotInstance from "@shadowtest/polkadot-backup";
 import SolanaInstance from "@kyve/solana";
 import ZilliqaInstance from "@kyve/zilliqa";
 import fs from "fs";

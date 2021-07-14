@@ -1,9 +1,12 @@
 {
-  "name": "@kyve/polkadot",
+  "name": "@shadowtest/polkadot-backup",
   "description": "The official KYVE node for Polkadot",
   "version": "0.0.0-alpha.19",
-  "author": "John Letey <john@kyve.network>, Fabian Riewe <fabian@kyve.network>",
-  "repository": "https://github.com/KYVENetwork/polkadot",
+  "author": "John Letey <john@kyve.network>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KYVENetwork/polkadot.git"
+  },
   "license": "MIT",
   "scripts": {
     "build": "tsc",
@@ -28,5 +31,10 @@
   },
   "devDependencies": {
     "@types/object-hash": "^2.1.0"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/KYVENetwork/polkadot/issues"
+  },
+  "homepage": "https://github.com/KYVENetwork/polkadot#readme",
+  "keywords": []
 }
