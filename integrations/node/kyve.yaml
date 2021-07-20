@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appchain-kyve-barnacle
+spec:
+  selector:
+    matchLabels:
+      app: kyve
+  template:
+    metadata:
+      labels:
+        app: kyve
+    spec:
+      containers:
+      - name: kyve-node
+        image: "baidang201/kyve-node-k8s:latest" #gcr.io/octopus-dev-309403/octopus-kyve:0.0.1
+        volumeMounts:
+        - name: env-volume
+          mountPath: /.env
+          subPath: .env
+        - name: arweave-key
+          mountPath: /arweave.json
+          subPath: arweave.json
+          readOnly: true
+        - name: config-volume
+          mountPath: /config.json
+          subPath: config.json
+      volumes:
+      - name: env-volume
+        configMap:
+          name: env-config
+      - name: arweave-key
+        secret:
+          secretName: arweave-key
+      - name: config-volume
+        configMap:
+          name: config-json-config
