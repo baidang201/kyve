@@ -1,0 +1,95 @@
+# $ kubectl create secret generic barnacle-kyve-uploader-wallet --from-file=uploader-key.json
+# $ kubectl create secret generic barnacle-kyve-validator-wallet --from-file=validator-key.json
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: barnacle-keyv-uploader-config
+data:
+  config.json: |
+    {
+      "pools": {
+        "gepLlre8wG8K3C15rNjpdKZZv_9pWsurRoEB6ir_EC4": 10
+      }
+    }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: barnacle-keyv-validator-config
+data:
+  config.json: |
+    {
+      "pools": {
+        "gepLlre8wG8K3C15rNjpdKZZv_9pWsurRoEB6ir_EC4": 10
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: barnacle-kyve
+spec:
+  selector:
+    matchLabels:
+      app: barnacle-kyve
+  template:
+    metadata:
+      labels:
+        app: barnacle-kyve
+    spec:
+      containers:
+      - name: kyve-uploader
+        image: "gcr.io/octopus-dev-309403/kyve@sha256:3dc2c4a552b81ca1f8b3c42f4a29bfbd6d6cfc98c156eb3e2636aa43c879b0a6"
+        env:
+        - name: CONFIG
+          value: "config.json"
+        - name: WALLET
+          value: "arweave.json"
+        - name: SEND_STATISTICS
+          value: "true"
+        - name: MAINTAINER
+          value: "julian@oct.network"
+        - name: NAME
+          value: "barnacle-kyve-uploader"
+        volumeMounts:
+        - name: uploader-wallet
+          mountPath: /arweave.json
+          subPath: uploader-key.json
+          readOnly: true
+        - name: uploader-config
+          mountPath: /config.json
+          subPath: config.json
+      - name: kyve-validator
+        image: "gcr.io/octopus-dev-309403/kyve@sha256:3dc2c4a552b81ca1f8b3c42f4a29bfbd6d6cfc98c156eb3e2636aa43c879b0a6"
+        env:
+        - name: CONFIG
+          value: "config.json"
+        - name: WALLET
+          value: "arweave.json"
+        - name: SEND_STATISTICS
+          value: "true"
+        - name: MAINTAINER
+          value: "julian@oct.network"
+        - name: NAME
+          value: "barnacle-kyve-validator"
+        volumeMounts:
+        - name: validator-wallet
+          mountPath: /arweave.json
+          subPath: validator-key.json
+          readOnly: true
+        - name: validator-config
+          mountPath: /config.json
+          subPath: config.json
+      volumes:
+      - name: uploader-wallet
+        secret:
+          secretName: barnacle-kyve-uploader-wallet
+      - name: uploader-config
+        configMap:
+          name: barnacle-keyv-uploader-config
+      - name: validator-wallet
+        secret:
+          secretName: barnacle-kyve-validator-wallet
+      - name: validator-config
+        configMap:
+          name: barnacle-keyv-validator-config
